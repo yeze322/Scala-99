@@ -1,6 +1,6 @@
 // Find the last element of a list
 //  1. last([1,2,3]) => 3
-//  2. last([]) => Null
+//  2. last([]) => NoSuchElementException
 
 object Last {
   // Using builtin property of List type.
@@ -16,6 +16,7 @@ object Last {
 }
 
 
+// ---------------------------------------------------------
 // Test
 var numbers = List(1, 2, 3, 4, 5, 6, 7, 8)
 
@@ -24,22 +25,9 @@ assert(Last.lastRecursive(numbers) == 8)
 
 
 // Benchmark
+import timer.benchmark
+
 var MAX_N = 99999
 
-var t1 = System.nanoTime()
-for (i <- 1 to MAX_N) {
-  Last.lastBuiltin(numbers)
-  Last.lastBuiltin(numbers)
-  Last.lastBuiltin(numbers)
-}
-var builtinTime = System.nanoTime() - t1
-
-var t2 = System.nanoTime()
-for (i <- 1 to MAX_N) {
-  Last.lastRecursive(numbers)
-  Last.lastBuiltin(numbers)
-  Last.lastBuiltin(numbers)
-}
-var recTime = System.nanoTime() - t2
-
-println("Ratio (recursive / builtin)", recTime.toFloat/builtinTime.toFloat)
+benchmark.MeasureTime("last(Builtin)", MAX_N, () => Last.lastBuiltin(numbers))
+benchmark.MeasureTime("last(Pattern matching)", MAX_N, () => Last.lastRecursive(numbers))
